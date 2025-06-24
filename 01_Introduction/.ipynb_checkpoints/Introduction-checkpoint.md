@@ -73,25 +73,6 @@
 * All values are objects; everything is stored in **heap memory**.
 * Use `sys.getsizeof()` to measure object size.
 * **Interning** is used to optimize memory for small integers and strings.
-1. Reference Counting (प्राथमिक मेमोरी मैनेजमेंट)
-
-   * Every Python object has a reference count, which tracks how many variables point to it.
-
-   * When the count drops to zero, the object is immediately deleted.
-  
-x = [1, 2, 3]  # Reference count = 1 (x points to the list)
-y = x          # Reference count = 2 (y also points to the same list)
-del x          # Reference count = 1 (only y remains)
-del y          # Reference count = 0 → Memory freed!
-Pros & Cons:
-
-✔ Fast & Immediate – Objects are deleted as soon as they are no longer needed.
-❌ Cannot detect cycles – If two objects reference each other, their count never drops to zero.
-2. Cyclic Garbage Collection (साइक्लिक गार्बेज कलेक्शन)
-
-  *  Reference counting fails when objects reference each other in a cycle.
-
-  *  Python’s Garbage Collector (GC) detects and removes such unreachable cycles.
 ---
 
 ### 📌 9. Zen of Python (via `import this`)
@@ -165,4 +146,122 @@ Used in design decisions of Python (interviewers love this).
 
 ---
 
-Would you like this converted into flashcards, `.md` notes, or do you want to move to next topic (like data types, control flow etc.)?
+
+### **Python Memory Model: Reference Counting + Cyclic Garbage Collection**  
+
+Python manages memory using two main mechanisms:  
+1. **Reference Counting** (for immediate cleanup)  
+2. **Cyclic Garbage Collection** (for handling circular references)  
+
+---
+
+## **1. Reference Counting (प्राथमिक मेमोरी मैनेजमेंट)**  
+- Every Python object has a **reference count**, which tracks how many variables point to it.  
+- When the count drops to **zero**, the object is **immediately deleted**.  
+
+### **How It Works:**  
+```python
+x = [1, 2, 3]  # Reference count = 1 (x points to the list)
+y = x          # Reference count = 2 (y also points to the same list)
+del x          # Reference count = 1 (only y remains)
+del y          # Reference count = 0 → Memory freed!
+```
+
+### **Pros & Cons:**  
+✔ **Fast & Immediate** – Objects are deleted as soon as they are no longer needed.  
+❌ **Cannot detect cycles** – If two objects reference each other, their count never drops to zero.  
+
+---
+
+## **2. Cyclic Garbage Collection (साइक्लिक गार्बेज कलेक्शन)**  
+- Reference counting fails when objects **reference each other in a cycle**.  
+- Python’s **Garbage Collector (GC)** detects and removes such **unreachable cycles**.  
+
+### **Example of a Cycle:**  
+```python
+a = [1, 2]  
+b = [3, 4]  
+a.append(b)  # a → [1, 2, [3, 4]]  
+b.append(a)  # b → [3, 4, [1, 2, [...]]] (cycle formed!)
+del a        # Reference count of 'a' decreases, but cycle remains
+del b        # Cycle is now unreachable → GC will clean it up
+```
+
+### **How GC Works:**  
+1. **Tracks objects** that can reference each other (lists, dicts, classes).  
+2. **Periodically checks** for cycles that are no longer reachable.  
+3. **Deletes** them to free memory.  
+
+### **Controlling GC:**  
+```python
+import gc
+
+gc.disable()  # Turn off garbage collection (not recommended)
+gc.collect()  # Manually trigger garbage collection
+print(gc.get_count())  # Check current GC thresholds
+```
+
+---
+
+## **Summary Table: Python Memory Management**  
+
+| Mechanism               | How It Works                          | Pros                              | Cons                              |
+|-------------------------|---------------------------------------|-----------------------------------|-----------------------------------|
+| **Reference Counting**  | Tracks references, deletes at zero    | Fast, immediate cleanup          | Fails with circular references    |
+| **Cyclic GC**           | Detects & removes unreachable cycles  | Handles complex memory leaks      | Slower, runs periodically         |
+
+---
+
+### **Key Takeaways:**  
+✅ **Most objects are freed via reference counting.**  
+✅ **Cyclic GC handles edge cases (like circular references).**  
+✅ **You can manually control GC, but it’s rarely needed.**  
+
+
+# **Python Objects Explained (Simplified & Important Points)**  
+
+## **1. What is a Python Object?**  
+- **Everything in Python is an object** (variables, functions, classes, data structures).  
+- An object is a **memory entity** that contains:  
+  - **Data** (e.g., numbers, strings, lists).  
+  - **Behavior** (methods/functions that operate on the data).  
+
+### **Example:**  
+```python
+num = 10      # `10` is an `int` object  
+name = "Ram"  # `"Ram"` is a `str` object  
+```
+
+---
+
+## **2. Key Properties of Python Objects**  
+Every object has:  
+1. **Identity** → Unique memory address (`id(obj)`).  
+2. **Type** → Data type (`int`, `str`, `list`, etc.) (`type(obj)`).  
+3. **Value** → The stored data (e.g., `10`, `"Hello"`).  
+
+### **Example:**  
+```python
+x = 5  
+print(id(x))    # Memory address (e.g., 140708392)  
+print(type(x))  # <class 'int'>  
+```
+
+---
+
+## **3. Mutable vs Immutable Objects**  
+| **Mutable (Changeable)** | **Immutable (Unchangeable)** |  
+|--------------------------|------------------------------|  
+| Can modify after creation. | Cannot modify after creation. |  
+| Examples: `list`, `dict`, `set` | Examples: `int`, `str`, `tuple` |  
+
+## **4. Functions & Classes are Also Objects**  
+- Even **functions and classes** are objects in Python.  
+```python
+def greet():  
+    print("Hello")  
+
+print(type(greet))  # <class 'function'>  
+```
+
+---
