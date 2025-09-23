@@ -1,0 +1,5 @@
+1 - LIst: A list in Python is a mutable, ordered collection of elements that can store heterogeneous data types and allows duplicate values. It is defined using square brackets [] and supports operations like adding, removing, and modifying elements. Lists are indexed, starting from 0, and are widely used for storing and manipulating sequences of data due to their flexibility and dynamic nature
+
+
+
+2 - Tuple: A tuple is an immutable, ordered collection of elements in Python that allows duplicate values. It is defined using parentheses () and can store heterogeneous data types. Once created, its elements cannot be modified, making it a fixed and hashable data structure. Tuples are commonly used for storing related pieces of information where immutability ensures data integrity

@@ -1,7 +1,3 @@
-Yeh hai Python ka full syllabus from basic to advanced — isme har wo topic shamil hai jo interviews, GATE preparation, aur data science sabke liye important hai. Maine is syllabus ko 6 stages me divide kiya hai:
-
----
-
 ## ✅ **Stage 1: Python Basics (Foundational Level)**
 
 ### 🧱 Core Concepts
